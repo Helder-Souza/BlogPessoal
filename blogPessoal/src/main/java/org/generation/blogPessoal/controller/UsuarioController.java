@@ -29,9 +29,14 @@ public class UsuarioController {
 	}
 	
 	@PostMapping("/cadastrar")
-	public ResponseEntity<Usuario> Post (@RequestBody Usuario usuario) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(usuarioService.CadastrarUsuario(usuario));
+	public ResponseEntity<Object> Post (@RequestBody Usuario usuario) {
+		Optional<Usuario> usuarioCadastrado = usuarioService.CadastrarUsuario(usuario);
+		if(usuarioCadastrado.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Usuário existente");
+		} else {
+			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCadastrado.get());
+		}
+		
 	}
 	
 	
