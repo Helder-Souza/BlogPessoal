@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -30,12 +32,14 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	@ApiOperation(value = "Loga o usuário no sistema")
 	@PostMapping("/logar")
 	public ResponseEntity<UserLogin> Autentication(@RequestBody Optional<UserLogin> user) {
 		return usuarioService.Logar(user).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 	
+	@ApiOperation(value = "Cadastra o usuário no sistema")
 	@PostMapping("/cadastrar")
 	public ResponseEntity<Object> Post (@RequestBody Usuario usuario) {
 		Optional<Usuario> usuarioCadastrado = usuarioService.CadastrarUsuario(usuario);
@@ -47,16 +51,19 @@ public class UsuarioController {
 		
 	}
 	
+	@ApiOperation(value = "Retorna uma lista de usuários")
 	@GetMapping
 	public ResponseEntity<List<Usuario>> getAll() {
 		return ResponseEntity.ok(repository.findAll());
 	}
 	
+	@ApiOperation(value = "Retorna um usuário que contenha um número identificador específico")
 	@GetMapping("/{id}")
 	public ResponseEntity<Usuario> getById(@PathVariable Long id) {
 		return repository.findById(id).map(resp -> ResponseEntity.ok(resp)).orElse(ResponseEntity.notFound().build());
 	}
 	
+	@ApiOperation(value = "Altera um usuário")
 	@PutMapping
 	public ResponseEntity<Usuario> put(@RequestBody Usuario usuario) {
 		return ResponseEntity.ok(repository.save(usuario));
